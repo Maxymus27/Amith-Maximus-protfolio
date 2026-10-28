@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Amith Maximus — Java Backend Developer. Spring Boot, REST APIs, SQL, Python Automation and AI-integrated backend systems.">
+<title>Amith Maximus — Java Backend Developer</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#020509;
+  --panel:rgba(7,13,20,.70);
+  --line:rgba(148,163,184,.16);
+  --text:#eef8ff;
+  --muted:#8190a2;
+  --blue:#00bfff;
+  --blue2:#2563eb;
+  --cyan:#22d3ee;
+  --purple:#8b5cf6;
+  --green:#42e6a4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Space Grotesk",sans-serif;
+  overflow-x:hidden;
+}
+body:has(#webgl-fallback.active){overflow:auto}
+a{color:inherit;text-decoration:none}
+#webgl{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:-5;
+  pointer-events:none;
+}
+#scene-hud{position:fixed;right:26px;bottom:25px;z-index:20;width:220px;pointer-events:none;font:10px "DM Mono",monospace;text-transform:uppercase;letter-spacing:.12em;color:#6e8194}
+#scene-hud .hud-top{display:flex;justify-content:space-between;margin-bottom:9px;color:#9bb1c3}
+#scene-hud .hud-title{color:var(--cyan);font-size:11px}
+#scene-hud .hud-track{height:2px;background:rgba(255,255,255,.1);overflow:hidden}
+#scene-hud .hud-progress{height:100%;width:0;background:linear-gradient(90deg,var(--blue2),var(--cyan),var(--purple));box-shadow:0 0 12px rgba(34,211,238,.6)}
+#scene-hud .hud-node{margin-top:8px;display:flex;justify-content:space-between}
+#scene-hud .hud-node span:last-child{color:#425568}
+.scene-tag{position:fixed;left:28px;bottom:26px;z-index:20;pointer-events:none;color:#536a7d;font:10px "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase}
+.scene-tag b{color:var(--blue)}
+@media(max-width:600px){#scene-hud{right:15px;bottom:15px;width:165px}.scene-tag{left:15px;bottom:15px}}
+#glow{
+  position:fixed;
+  inset:0;
+  z-index:-4;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 72% 26%,rgba(0,191,255,.11),transparent 27rem),
+    radial-gradient(circle at 15% 70%,rgba(139,92,246,.08),transparent 30rem);
+}
+#grain{
+  position:fixed;inset:0;z-index:-3;pointer-events:none;opacity:.16;
+  background-image:radial-gradient(rgba(255,255,255,.2) .65px,transparent .65px);
+  background-size:18px 18px;
+}
+#webgl-fallback{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at 70% 20%,rgba(0,191,255,.1),transparent 30rem),var(--bg);
+  z-index:-6;
+}
+#webgl-fallback.active{display:block}
+#boot-screen{position:fixed;inset:0;z-index:100;background:#020509;display:grid;place-items:center;transition:opacity .7s ease,visibility .7s ease}
+#boot-screen.done{opacity:0;visibility:hidden;pointer-events:none}
+.boot-inner{width:min(520px,calc(100% - 40px));font-family:"DM Mono",monospace;text-transform:uppercase;letter-spacing:.12em}
+.boot-mark{color:#22d3ee;font-size:10px;margin-bottom:18px}
+.boot-title{font-size:clamp(24px,4vw,42px);letter-spacing:-.04em;color:#eef8ff;margin-bottom:24px}
+.boot-track{height:2px;background:rgba(255,255,255,.12);overflow:hidden}
+#boot-bar{height:100%;width:0;background:linear-gradient(90deg,#2563eb,#00bfff,#22d3ee,#8b5cf6);box-shadow:0 0 18px rgba(34,211,238,.7)}
+.boot-meta{display:flex;justify-content:space-between;color:#5d7084;font-size:9px;margin-top:10px}
+#boot-percent{color:#22d3ee}
+.container{width:min(1180px,calc(100% - 36px));margin:auto}
+
+nav{
+  position:fixed;
+  top:18px;left:50%;transform:translateX(-50%);
+  z-index:30;
+  display:flex;gap:4px;padding:7px;
+  max-width:calc(100% - 20px);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:999px;
+  background:rgba(2,5,9,.58);
+  backdrop-filter:blur(18px);
+  box-shadow:0 20px 70px rgba(0,0,0,.4);
+}
+nav a{
+  padding:9px 15px;border-radius:999px;
+  color:#9aabba;font:500 10px "DM Mono",monospace;
+  letter-spacing:.1em;text-transform:uppercase;
+}
+nav a:hover,nav a.active{color:#fff;background:rgba(0,191,255,.12)}
+
+.hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  padding:130px 0 90px;
+  position:relative;
+}
+.hero-copy{max-width:780px}
+.status{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(0,191,255,.32);
+  background:rgba(0,191,255,.05);
+  color:var(--cyan);
+  font:500 10px "DM Mono",monospace;
+  letter-spacing:.1em;text-transform:uppercase;
+}
+.status i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 15px var(--green)}
+h1{
+  margin-top:25px;
+  font-size:clamp(75px,12vw,160px);
+  line-height:.78;
+  letter-spacing:-.08em;
+}
+h1 > .name-line{display:block;white-space:nowrap;position:relative;line-height:.78;color:#eef8ff;opacity:1;-webkit-text-stroke:1px rgba(238,248,255,.18);text-rendering:geometricPrecision;font-kerning:none;}
+.name-char{display:inline;min-width:0;color:inherit;-webkit-text-fill-color:currentColor;letter-spacing:inherit;transition:color .08s,text-shadow .08s,-webkit-text-stroke-color .08s;will-change:contents;}
+.name-char.scramble{color:#22d3ee;-webkit-text-fill-color:#22d3ee;-webkit-text-stroke:0 transparent;text-shadow:0 0 18px rgba(34,211,238,.85),0 0 38px rgba(37,99,235,.45);}
+.name-random-glyph{position:fixed;z-index:80;pointer-events:none;color:#22d3ee;font:700 12px "DM Mono",monospace;letter-spacing:.08em;text-shadow:0 0 12px rgba(34,211,238,.9);animation:nameGlyphFloat .42s ease-out forwards}
+@keyframes nameGlyphFloat{0%{opacity:0;transform:translate3d(0,8px,0) scale(.8)}20%{opacity:1}100%{opacity:0;transform:translate3d(var(--gx),var(--gy),0) scale(1.15)}}
+.hero-role{
+  margin-top:32px;
+  max-width:720px;
+  font-size:clamp(20px,2.5vw,31px);
+  line-height:1.2;
+}
+.hero-role b{color:var(--blue)}
+.hero-copy-text{max-width:650px;margin-top:17px;color:var(--muted);font-size:15px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:29px}
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:12px 17px;border:1px solid var(--line);border-radius:999px;
+  font-size:12px;font-weight:600;transition:.25s
+}
+.btn.primary{background:linear-gradient(135deg,var(--blue2),var(--blue));color:#031018;border:0}
+.btn:hover{transform:translateY(-2px);border-color:rgba(0,191,255,.42)}
+
+.hero-hint{
+  position:absolute;right:35px;bottom:45px;
+  color:#536477;font:10px "DM Mono",monospace;
+  letter-spacing:.12em;text-transform:uppercase;
+  writing-mode:vertical-rl;
+}
+.hero-hint::before{
+  content:"";display:block;width:1px;height:70px;
+  background:linear-gradient(var(--blue),transparent);margin-bottom:12px
+}
+
+section{padding:125px 0;position:relative}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:45px}
+.kicker{color:var(--blue);font:10px "DM Mono",monospace;letter-spacing:.16em;text-transform:uppercase}
+h2{
+  margin-top:8px;font-size:clamp(45px,6vw,80px);
+  line-height:.92;letter-spacing:-.06em
+}
+.note{max-width:440px;color:var(--muted);font-size:14px}
+
+.panel{
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:var(--panel);
+  backdrop-filter:blur(15px);
+  padding:30px;
+  box-shadow:0 30px 90px rgba(0,0,0,.18)
+}
+.grid{display:grid;gap:16px}
+.two{grid-template-columns:1.25fr .75fr}
+.about-big{font-size:clamp(24px,3vw,39px);line-height:1.2;letter-spacing:-.035em}
+.about-big em{font-style:normal;color:var(--blue)}
+.fact{padding:15px 0;border-bottom:1px solid var(--line)}
+.fact:last-child{border-bottom:0}
+.fact small{display:block;color:#5d7084;font:10px "DM Mono",monospace;text-transform:uppercase}
+.fact strong{display:block;margin-top:4px;font-size:19px}
+
+.cards3{grid-template-columns:repeat(3,1fr)}
+.card{
+  min-height:175px;padding:24px;border:1px solid var(--line);border-radius:20px;
+  background:rgba(7,13,20,.68);transition:.3s
+}
+.card:hover{transform:translateY(-6px);border-color:rgba(0,191,255,.34);box-shadow:0 25px 65px rgba(0,191,255,.05)}
+.card small{color:#536477;font:10px "DM Mono",monospace}
+.card h3{margin:25px 0 8px;font-size:22px}
+.card p{color:var(--muted);font-size:13px}
+
+.project{
+  display:grid;grid-template-columns:62px 1fr auto;gap:20px;align-items:center;
+  padding:27px;border:1px solid var(--line);border-radius:21px;
+  background:rgba(7,13,20,.7);transition:.3s
+}
+.project+.project{margin-top:13px}
+.project:hover{transform:translateX(5px);border-color:rgba(0,191,255,.35)}
+.project-num{color:var(--blue);font:12px "DM Mono",monospace}
+.project h3{font-size:27px}
+.project p{margin-top:6px;color:var(--muted);font-size:14px;max-width:760px}
+.tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.tag{padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:#a1b0c0;font:10px "DM Mono",monospace}
+.arrow{width:46px;height:46px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;color:var(--blue)}
+
+.timeline{display:grid;gap:16px}
+.timeline-item{display:grid;grid-template-columns:190px 1fr;gap:25px}
+.date{color:var(--blue);font:10px "DM Mono",monospace;padding-top:5px}
+.timeline-card{border:1px solid var(--line);border-radius:21px;padding:27px;background:rgba(7,13,20,.7)}
+.timeline-card small{color:var(--cyan);font:10px "DM Mono",monospace}
+.timeline-card h3{font-size:26px;margin-top:4px}
+.timeline-card ul{margin:14px 0 0 18px;color:var(--muted);font-size:14px}
+
+.contact{text-align:center;padding:160px 0 100px}
+.contact h2{font-size:clamp(55px,8vw,110px)}
+.contact h2 span{color:var(--blue)}
+.contact p{max-width:600px;margin:20px auto 28px;color:var(--muted)}
+.contact .actions{justify-content:center}
+
+footer{border-top:1px solid var(--line);padding:24px 0 35px;text-align:center;color:#526376;font:10px "DM Mono",monospace}
+
+.reveal{opacity:0;transform:translateY(25px);transition:.75s ease}
+.reveal.show{opacity:1;transform:none}
+
+@media(max-width:850px){
+  .two{grid-template-columns:1fr}
+  .cards3{grid-template-columns:1fr 1fr}
+  .hero{padding-top:120px}
+}
+@media(max-width:600px){
+  nav{width:calc(100% - 18px);overflow:auto;justify-content:flex-start}
+  nav a{white-space:nowrap;padding:8px 10px}
+  .cards3{grid-template-columns:1fr}
+  .hero{min-height:100vh}
+  h1{font-size:68px}
+  section{padding:90px 0}
+  .section-head{display:block}
+  .note{margin-top:16px}
+  .timeline-item{grid-template-columns:1fr;gap:7px}
+  .project{grid-template-columns:42px 1fr}
+  .project .arrow{grid-column:2}
+}
+
+/* V5 premium digital-twin HUD */
+#v5-hud{position:fixed;left:28px;top:50%;transform:translateY(-50%);z-index:21;pointer-events:none;font:9px "DM Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:#526779;opacity:.78}
+#v5-hud .v5-line{display:flex;align-items:center;gap:9px;margin:10px 0}
+#v5-hud i{display:block;width:5px;height:5px;border-radius:50%;background:#22d3ee;box-shadow:0 0 12px #22d3ee}
+#v5-hud .v5-value{color:#9bb1c3}
+#v5-hud .v5-value strong{color:#22d3ee;font-weight:500}
+#v5-hud .v5-axis{width:1px;height:86px;background:linear-gradient(#8b5cf6,transparent);margin-left:2px}
+@media(max-width:700px){#v5-hud{display:none}}
+</style>
+
+<meta name="description" content="Amith Maximus — Java Backend Developer portfolio featuring Spring Boot, REST APIs, MySQL, Python automation and Generative AI.">
+<meta name="theme-color" content="#05070d">
+<meta property="og:title" content="Amith Maximus — Java Backend Developer">
+<meta property="og:description" content="Cinematic 3D backend developer portfolio — Java, Spring Boot, REST APIs, MySQL and Generative AI.">
+<meta property="og:type" content="website">
+</head>
+
+<body>
+<div class="cinematic-vignette"></div>
+<canvas id="webgl"></canvas>
+<div id="webgl-fallback"></div>
+<div id="boot-screen">
+  <div class="boot-inner">
+    <div class="boot-mark">AM / BACKEND CORE</div>
+    <div class="boot-title">INITIALIZING INFRASTRUCTURE</div>
+    <div class="boot-track"><div id="boot-bar"></div></div>
+    <div class="boot-meta"><span id="boot-status">LOADING 3D SYSTEM</span><span id="boot-percent">0%</span></div>
+  </div>
+</div>
+<div id="glow"></div>
+<div id="grain"></div>
+<div id="scene-hud">
+  <div class="hud-top"><span class="hud-title" id="hud-title">SERVER ROOM</span><span id="hud-count">01 / 07</span></div>
+  <div class="hud-track"><div class="hud-progress" id="hud-progress"></div></div>
+  <div class="hud-node"><span id="hud-sub">INITIALIZING INFRASTRUCTURE</span><span>SCROLL</span></div>
+</div>
+<div class="scene-tag">SYSTEM <b>ONLINE</b> · 3D ASSETS + CAMERA LINKED TO SCROLL</div>
+<div id="v5-hud">
+  <div class="v5-axis"></div>
+  <div class="v5-line"><i></i><span>RENDER</span><span class="v5-value"><strong>REALTIME</strong></span></div>
+  <div class="v5-line"><i></i><span>NETWORK</span><span class="v5-value">PACKETS</span></div>
+  <div class="v5-line"><i></i><span>CORE</span><span class="v5-value">AI / LLM</span></div>
+  <div class="v5-line"><i></i><span>DATA</span><span class="v5-value">MYSQL</span></div>
+</div>
+
+
+<nav>
+  <a href="#about">About</a>
+  <a href="#stack">Stack</a>
+  <a href="#projects">Projects</a>
+  <a href="#experience">Experience</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<main>
+<section class="hero" id="home" data-scene="SERVER ROOM" data-sub="INITIALIZING INFRASTRUCTURE">
+  <div class="container">
+    <div class="hero-copy">
+      <div class="status"><i></i> Java Backend Developer · Spring Boot · Generative AI</div>
+      <h1 id="name-glitch" aria-label="Amith Maximus"><span class="name-line" data-name="AMITH"></span><span class="name-line" data-name="MAXIMUS"></span></h1>
+      <div class="hero-role">
+        Building <b>backend systems</b>, APIs, databases and AI-integrated applications with Java & Spring Boot.
+      </div>
+      <p class="hero-copy-text">
+        Computer Science student focused on Java, Spring Boot, REST APIs, SQL/MySQL,
+        Python automation and Generative AI.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="#projects">Explore Projects ↘</a>
+        <a class="btn" href="mailto:amithmaximus@gmail.com">Let's Connect →</a>
+        <a class="btn" href="maxy resume main.pdf" target="_blank" rel="noopener">Resume ↗</a>
+        <a class="btn" href="https://github.com/Maxymus27" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-hint">scroll to explore</div>
+</section>
+
+<section id="about" data-scene="API GATEWAY" data-sub="JAVA · SPRING BOOT · REST">
+<div class="container reveal">
+  <div class="section-head">
+    <div><div class="kicker">01 / About</div><h2>Backend<br>by mindset.</h2></div>
+    <p class="note">The 3D world behind this page represents the way I think about software: requests move through services, data layers, infrastructure and intelligence.</p>
+  </div>
+  <div class="grid two">
+    <div class="panel about-big">
+      I am a <em>Computer Science student</em> and aspiring Java Backend Developer focused on reliable systems with <em>Spring Boot, REST APIs and SQL</em>.
+    </div>
+    <div class="panel">
+      <div class="fact"><small>Education</small><strong>B.Tech CSE — VVIT</strong></div>
+      <div class="fact"><small>CGPA</small><strong>8.0 / 10</strong></div>
+      <div class="fact"><small>Location</small><strong>Guntur, Andhra Pradesh</strong></div>
+      <div class="fact"><small>Direction</small><strong>Backend Engineering + AI</strong></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="stack" data-scene="SERVICE LAYER" data-sub="JAVA · SQL · AUTOMATION · AI">
+<div class="container reveal">
+  <div class="section-head">
+    <div><div class="kicker">02 / Stack</div><h2>Tools I build with.</h2></div>
+    <p class="note">A backend-first stack centered around Java and Spring, with Python automation and Generative AI becoming part of the workflow.</p>
+  </div>
+  <div class="grid cards3">
+    <div class="card"><small>01 / LANGUAGE</small><h3>Java</h3><p>Core Java, OOP, DSA and backend application development.</p></div>
+    <div class="card"><small>02 / FRAMEWORK</small><h3>Spring Boot</h3><p>REST APIs, layered architecture and backend services.</p></div>
+    <div class="card"><small>03 / DATA</small><h3>SQL + MySQL</h3><p>Relational data, persistence and database-driven applications.</p></div>
+    <div class="card"><small>04 / SECURITY</small><h3>Security + JWT</h3><p>Spring Security, JWT and authentication concepts.</p></div>
+    <div class="card"><small>05 / AUTOMATION</small><h3>Python</h3><p>Automation, web scraping, Excel and CSV processing.</p></div>
+    <div class="card"><small>06 / INTELLIGENCE</small><h3>Generative AI</h3><p>Prompt engineering, Spring AI, LLM APIs and AI integration.</p></div>
+  </div>
+</div>
+</section>
+
+<section id="projects" data-scene="DATABASE CLUSTER" data-sub="MYSQL · REST CRUD · DATA FLOW">
+<div class="container reveal">
+  <div class="section-head">
+    <div><div class="kicker">03 / Projects</div><h2>Systems I've built.</h2></div>
+    <p class="note">Three projects built during my Java Full Stack Development internship at Cognevance Technologies.</p>
+  </div>
+  <article class="project">
+    <div class="project-num">01</div>
+    <div>
+      <h3>Student Management System</h3>
+      <p>Java-based management application developed during my Cognevance Technologies internship, focused on student records and core management workflows.</p>
+      <div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">REST API</span><span class="tag">MySQL</span></div>
+    </div>
+    <a class="arrow" href="https://github.com/Maxymus27/cognevance_studentManagementSystem" target="_blank" rel="noopener">↗</a>
+  </article>
+  <article class="project">
+    <div class="project-num">02</div>
+    <div>
+      <h3>Online Banking Management System</h3>
+      <p>Java full-stack internship project focused on online banking workflows and management functionality.</p>
+      <div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">Backend</span><span class="tag">Database</span></div>
+    </div>
+    <a class="arrow" href="https://github.com/Maxymus27/cognevance_OnlineBankingManagementSystem" target="_blank" rel="noopener">↗</a>
+  </article>
+  <article class="project">
+    <div class="project-num">03</div>
+    <div>
+      <h3>Enterprise ERP &amp; Business Analytics Platform</h3>
+      <p>Enterprise-oriented project developed during the internship, bringing ERP workflows and business analytics into a unified platform.</p>
+      <div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">ERP</span><span class="tag">Business Analytics</span></div>
+    </div>
+    <a class="arrow" href="https://github.com/Maxymus27/cognevance_enterprise-erp-platform" target="_blank" rel="noopener">↗</a>
+  </article>
+</div>
+</section>
+
+<section id="experience" data-scene="AUTOMATION NODE" data-sub="PYTHON · WEB SCRAPING · DATA">
+<div class="container reveal">
+  <div class="section-head">
+    <div><div class="kicker">04 / Experience</div><h2>Where I've worked.</h2></div>
+    <p class="note">Hands-on experience with Python automation, web scraping, tender data, content workflows and team coordination.</p>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="date">AUG 2026 — OCT 2026</div>
+      <div class="timeline-card">
+        <small>COGNEVANCE TECHNOLOGIES · INTERNSHIP</small>
+        <h3>Java Full Stack Development Intern</h3>
+        <ul>
+          <li>Developed three internship projects: Student Management System, Online Banking Management System, and Enterprise ERP &amp; Business Analytics Platform.</li>
+          <li>Worked with Java and backend application development workflows.</li>
+          <li>Built practical business-focused software as part of the internship.</li>
+        </ul>
+        <div class="tags">
+          <a class="tag" href="https://github.com/Maxymus27/cognevance_studentManagementSystem" target="_blank" rel="noopener">Student Management ↗</a>
+          <a class="tag" href="https://github.com/Maxymus27/cognevance_OnlineBankingManagementSystem" target="_blank" rel="noopener">Online Banking ↗</a>
+          <a class="tag" href="https://github.com/Maxymus27/cognevance_enterprise-erp-platform" target="_blank" rel="noopener">Enterprise ERP ↗</a>
+        </div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">NOV 2024 — MAY 2025</div>
+      <div class="timeline-card">
+        <small>BIDALERT · INTERNSHIP</small>
+        <h3>Python Automation Intern</h3>
+        <ul>
+          <li>Built Python automation tools for repetitive workflows.</li>
+          <li>Collected tender information through web scraping.</li>
+          <li>Processed tender data using Excel and CSV files.</li>
+          <li>Used AI tools in development and content workflows.</li>
+          <li>Worked with tender tracking, documentation and publishing.</li>
+          <li>Coordinated tasks with a team of 12 interns.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section data-scene="SYSTEM STATUS" data-sub="4★ CODECHEF · 200+ DAY STREAK">
+<div class="container reveal">
+  <div class="section-head">
+    <div><div class="kicker">05 / Progress</div><h2>Still building.</h2></div>
+    <p class="note">Consistency matters more than having everything figured out.</p>
+  </div>
+  <div class="grid cards3">
+    <div class="card"><small>ACHIEVEMENT</small><h3>4★ CodeChef</h3><p>Competitive programming milestone.</p></div>
+    <div class="card"><small>CONSISTENCY</small><h3>200+ Day Streak</h3><p>Long-term coding consistency.</p></div>
+    <div class="card"><small>EDUCATION</small><h3>8.0 / 10</h3><p>Current B.Tech CSE CGPA.</p></div>
+  </div>
+</div>
+</section>
+
+<section data-scene="AI / LLM CORE" data-sub="SPRING AI · LLM APIS · RAG · AGENTS">
+<div class="container reveal">
+  <div class="section-head">
+    <div><div class="kicker">06 / Current Focus</div><h2>What's next.</h2></div>
+    <p class="note">Moving from Java fundamentals toward production-ready backend systems and AI-integrated applications.</p>
+  </div>
+  <div class="grid cards3">
+    <div class="card"><small>LEARNING</small><h3>Backend Engineering</h3><p>Java, DSA, Spring Boot, REST APIs, SQL, JPA, Hibernate and Spring Security.</p></div>
+    <div class="card"><small>BUILDING</small><h3>Production Thinking</h3><p>Docker, AWS, system design and database-driven backend applications.</p></div>
+    <div class="card"><small>EXPLORING</small><h3>AI + Backend</h3><p>Spring AI, LLM APIs, RAG, AI agents and practical Generative AI integration.</p></div>
+  </div>
+</div>
+</section>
+
+<section class="contact" id="contact" data-scene="SYSTEM EXIT" data-sub="CONNECT · BUILD · SHIP">
+<div class="container reveal">
+  <div class="kicker">07 / Contact</div>
+  <h2>Let's build<br><span>something useful.</span></h2>
+  <p>Open to Java Backend / Spring Boot internships, software engineering opportunities and AI-integrated backend projects.</p>
+  <div class="actions">
+    <a class="btn primary" href="mailto:amithmaximus@gmail.com">Email Me →</a>
+    <a class="btn" href="https://github.com/Maxymus27" target="_blank" rel="noopener">GitHub ↗</a>
+    <a class="btn" href="https://www.linkedin.com/in/amith-maximus-2b9551420/" target="_blank" rel="noopener">LinkedIn ↗</a>
+    <a class="btn" href="maxy resume main.pdf" target="_blank" rel="noopener">Resume ↗</a>
+  </div>
+</div>
+</section>
+</main>
+
+<footer>AMITH MAXIMUS · JAVA BACKEND DEVELOPER · BUILD. LEARN. SHIP. REPEAT. · 3D ASSETS: CC0</footer>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+  }
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+
+const { gsap } = window;
+const { ScrollTrigger } = window;
+gsap.registerPlugin(ScrollTrigger);
+
+const canvas=document.querySelector("#webgl");
+const fallback=document.querySelector("#webgl-fallback");
+
+let renderer;
+try{
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:"high-performance"});
+}catch(e){
+  fallback.classList.add("active");
+}
+
+if(renderer){
+  renderer.setPixelRatio(Math.min(devicePixelRatio,1.8));
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.outputColorSpace=THREE.SRGBColorSpace;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.15;
+
+  const composer=new EffectComposer(renderer);
+  composer.setPixelRatio(Math.min(devicePixelRatio,1.6));
+  const renderPass=new RenderPass(null,null);
+
+  const scene=new THREE.Scene();
+  // V6: cinematic post-processing. The bloom is intentionally restrained so text/UI remains crisp.
+  const bloomPass=new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),1.05,.7,.72);
+
+  scene.background=new THREE.Color(0x020509);
+  scene.fog=new THREE.FogExp2(0x020509,.025);
+
+  const camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,120);
+  camera.position.set(0,4.2,15);
+  renderPass.scene=scene; renderPass.camera=camera;
+  composer.addPass(renderPass);
+  composer.addPass(bloomPass);
+
+  const world=new THREE.Group();
+  scene.add(world);
+
+  // Real glTF/GLB assets: CC0 server-rack and desktop-tower models from 3DAssets.dev.
+  // They are loaded from immutable CORS-enabled CDN URLs with Three.js GLTFLoader.
+  const assetLoader=new GLTFLoader();
+  const realAssets=new THREE.Group();
+  world.add(realAssets);
+  const loadedAssets=[];
+  const ASSETS={
+    rack:"https://cdn.3dassets.dev/assets/26191/v1/model.glb",
+    dataRack:"https://cdn.3dassets.dev/assets/32057/v1/model.glb",
+    desktop:"https://cdn.3dassets.dev/assets/38829/v1/model.glb"
+  };
+  function loadGLB(url, position, scale, rotationY=0){
+    assetLoader.load(url,(gltf)=>{
+      const root=gltf.scene;
+      root.position.set(...position);
+      root.scale.setScalar(scale);
+      root.rotation.y=rotationY;
+      root.traverse(o=>{
+        if(o.isMesh){
+          o.castShadow=false;
+          o.receiveShadow=true;
+          if(o.material){
+            o.material.metalness=Math.max(o.material.metalness ?? 0,.45);
+            o.material.roughness=Math.min(o.material.roughness ?? .5,.48);
+          }
+        }
+      });
+      realAssets.add(root);
+      loadedAssets.push(root);
+    },undefined,(err)=>console.warn("3D asset failed to load:",url,err));
+  }
+  loadGLB(ASSETS.rack,[-6.2,-1.02,-1.4],2.55,.05);
+  loadGLB(ASSETS.rack,[6.2,-1.02,-1.4],2.55,Math.PI+.05);
+  loadGLB(ASSETS.rack,[-6.2,-1.02,3.2],2.55,.08);
+  loadGLB(ASSETS.rack,[6.2,-1.02,3.2],2.55,Math.PI-.08);
+  loadGLB(ASSETS.dataRack,[-3.15,-1.02,-.9],2.25,.12);
+  loadGLB(ASSETS.desktop,[3.15,-1.02,-.9],3.2,Math.PI-.18);
+
+  const mat={
+    steel:new THREE.MeshStandardMaterial({color:0x111b25,metalness:.82,roughness:.25}),
+    steel2:new THREE.MeshStandardMaterial({color:0x1a2632,metalness:.75,roughness:.28}),
+    blue:new THREE.MeshStandardMaterial({color:0x00bfff,emissive:0x004c66,emissiveIntensity:2.2,metalness:.65,roughness:.2}),
+    cyan:new THREE.MeshStandardMaterial({color:0x22d3ee,emissive:0x004d58,emissiveIntensity:2.0,metalness:.55,roughness:.2}),
+    purple:new THREE.MeshStandardMaterial({color:0x8b5cf6,emissive:0x2c0a63,emissiveIntensity:2.0,metalness:.6,roughness:.2}),
+    black:new THREE.MeshStandardMaterial({color:0x05090e,metalness:.7,roughness:.34}),
+    glass:new THREE.MeshPhysicalMaterial({color:0x0b2432,transparent:true,opacity:.32,metalness:.2,roughness:.1,transmission:.2})
+  };
+
+  function box(w,h,d,x,y,z,material=mat.steel){
+    const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
+    m.position.set(x,y,z);world.add(m);return m;
+  }
+  function cyl(r,h,x,y,z,material=mat.steel){
+    const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,32),material);
+    m.position.set(x,y,z);world.add(m);return m;
+  }
+  function line(a,b,color=0x00bfff,opacity=.55){
+    const g=new THREE.BufferGeometry().setFromPoints([a,b]);
+    const l=new THREE.Line(g,new THREE.LineBasicMaterial({color,transparent:true,opacity}));
+    world.add(l);return l;
+  }
+
+  // Floor
+  const floor=box(34,.12,25,0,-1.05,0,mat.black);
+
+  // V5: animated shader floor — a living digital-twin surface with scanlines and flowing energy.
+  const floorShader=new THREE.ShaderMaterial({
+    transparent:true,depthWrite:false,
+    uniforms:{uTime:{value:0},uColor:{value:new THREE.Color(0x00bfff)},uPurple:{value:new THREE.Color(0x8b5cf6)}},
+    vertexShader:`varying vec2 vUv; void main(){vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+    fragmentShader:`varying vec2 vUv; uniform float uTime; uniform vec3 uColor; uniform vec3 uPurple;
+      float line(vec2 p,float width){float a=abs(fract(p)-.5);return 1.-smoothstep(width,width+.012,a);}
+      void main(){vec2 uv=vUv; float gx=line(uv.x*28.,.018); float gz=line(uv.y*22.,.014);
+      float sweep=smoothstep(.92,0.0,abs(fract(uv.y*1.6-uTime*.055)-.5)*2.);
+      float diag=pow(max(0.,sin((uv.x+uv.y)*18.-uTime*2.)),18.);
+      vec3 c=mix(uColor,uPurple,uv.y*.7); float a=(gx+gz)*.16+sweep*.075+diag*.07;
+      gl_FragColor=vec4(c,a);}`
+  });
+  const floorFX=new THREE.Mesh(new THREE.PlaneGeometry(34,25),floorShader);
+  floorFX.rotation.x=-Math.PI/2; floorFX.position.y=-.905; world.add(floorFX);
+
+  const grid=new THREE.GridHelper(34,34,0x00bfff,0x163347);
+  grid.position.y=-.98;
+  grid.material.transparent=true;
+  grid.material.opacity=.18;
+  world.add(grid);
+
+  // Server racks
+  function rack(x,z,color){
+    box(2.1,5.2,1.65,x,1.55,z,mat.steel);
+    box(1.72,4.75,1.55,x,1.55,z+.08,mat.black);
+    for(let i=0;i<9;i++){
+      box(1.45,.25,.06,x,.05+i*.52,z-.75,color);
+      box(.09,.07,.08,x-.56,.05+i*.52,z-.80,mat.green);
+      box(.09,.07,.08,x-.36,.05+i*.52,z-.80,color);
+      box(.09,.07,.08,x-.16,.05+i*.52,z-.80,mat.blue);
+    }
+    // rack top glow
+    box(1.5,.035,.05,x,4.15,z-.82,color);
+  }
+  rack(-4,-2,mat.blue);
+  rack(4,-2,mat.cyan);
+  rack(-4,3,mat.purple);
+  rack(4,3,mat.blue);
+
+  // Central API gateway
+  const gateway=box(3.2,2.0,1.6,0,1.2,1.1,mat.steel2);
+  box(2.6,.08,.05,0,2.0,.28,mat.blue);
+  for(let i=0;i<4;i++) box(.35,.55,.06,-.9+i*.6,1.0,.28,[mat.blue,mat.cyan,mat.purple,mat.blue][i]);
+
+  // Database cylinders
+  function database(x,z){
+    cyl(1.15,1.55,x,.15,z,mat.steel2);
+    cyl(1.0,.08,x,.94,z,mat.cyan);
+    cyl(1.0,.08,x,-.64,z,mat.blue);
+    for(let i=0;i<3;i++){
+      const ring=new THREE.Mesh(new THREE.TorusGeometry(.92,.025,8,48),mat.blue);
+      ring.rotation.x=Math.PI/2;ring.position.set(x,-.4+i*.45,z);world.add(ring);
+    }
+  }
+  database(-1.9,-.2);
+  database(1.9,-.2);
+
+  // AI hologram core
+  const core=new THREE.Mesh(new THREE.IcosahedronGeometry(1.05,2),mat.purple);
+  core.position.set(0,3.9,-.4);world.add(core);
+  const coreRing=new THREE.Mesh(new THREE.TorusGeometry(1.55,.025,12,100),mat.cyan);
+  coreRing.rotation.x=Math.PI/2;coreRing.position.set(0,3.9,-.4);world.add(coreRing);
+  const coreRing2=coreRing.clone();coreRing2.material=mat.purple;coreRing2.rotation.y=Math.PI/2;world.add(coreRing2);
+
+  // Data cables
+  const pts=[
+    [new THREE.Vector3(-4,3.1,3),new THREE.Vector3(-2.8,2.1,1.1)],
+    [new THREE.Vector3(4,3.1,3),new THREE.Vector3(2.8,2.1,1.1)],
+    [new THREE.Vector3(-4,-.2,3),new THREE.Vector3(-1.8,.2,.8)],
+    [new THREE.Vector3(4,-.2,3),new THREE.Vector3(1.8,.2,.8)],
+    [new THREE.Vector3(-1.9,.15,-.2),new THREE.Vector3(0,1.15,1.1)],
+    [new THREE.Vector3(1.9,.15,-.2),new THREE.Vector3(0,1.15,1.1)],
+    [new THREE.Vector3(0,2.2,1.1),new THREE.Vector3(0,3.8,-.4)]
+  ];
+  pts.forEach((p,i)=>line(p[0],p[1],[0x00bfff,0x22d3ee,0x8b5cf6][i%3],.75));
+
+  // V5: curved data conduits. These make the architecture read as a real network instead of isolated objects.
+  const conduits=[];
+  const conduitDefs=[
+    [[-6,1.8,2.4],[-4,2.8,1.8],[-1.2,2.0,1.1],[0,1.25,1.1]],
+    [[6,1.8,2.4],[4,2.8,1.8],[1.2,2.0,1.1],[0,1.25,1.1]],
+    [[0,2.0,1.1],[0,2.8,.5],[0,3.5,-.1],[0,3.9,-.4]],
+    [[-1.9,.45,-.2],[-2.8,.15,-.8],[-3.8,.1,-1.8],[-4,.1,-2.0]],
+    [[1.9,.45,-.2],[2.8,.15,-.8],[3.8,.1,-1.8],[4,.1,-2.0]]
+  ];
+  conduitDefs.forEach((arr,i)=>{
+    const curve=new THREE.CatmullRomCurve3(arr.map(v=>new THREE.Vector3(...v)));
+    const tube=new THREE.Mesh(new THREE.TubeGeometry(curve,48,.022,8,false),new THREE.MeshBasicMaterial({color:[0x00bfff,0x22d3ee,0x8b5cf6][i%3],transparent:true,opacity:.45}));
+    world.add(tube);
+    const pulse=new THREE.Mesh(new THREE.SphereGeometry(.075,12,12),new THREE.MeshBasicMaterial({color:[0x22d3ee,0x00bfff,0x8b5cf6][i%3]}));
+    world.add(pulse);
+    conduits.push({curve,pulse,phase:i*.17,speed:.09+i*.012});
+  });
+
+  // Floating labels as canvas sprites
+  function label(text,x,y,z,color="#00bfff"){
+    const c=document.createElement("canvas");c.width=512;c.height=128;
+    const ctx=c.getContext("2d");
+    ctx.clearRect(0,0,512,128);
+    ctx.font="500 28px monospace";ctx.fillStyle=color;ctx.textAlign="center";
+    ctx.fillText(text,256,72);
+    const tex=new THREE.CanvasTexture(c);
+    const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));
+    sprite.position.set(x,y,z);sprite.scale.set(3.2,.8,1);world.add(sprite);return sprite;
+  }
+  label("SPRING BOOT",0,2.5,1.05,"#22d3ee");
+  label("MYSQL",-1.9,1.15,-.2,"#00bfff");
+  label("MYSQL",1.9,1.15,-.2,"#00bfff");
+  label("AI / LLM",0,5.35,-.4,"#8b5cf6");
+
+  // Architectural spine + holographic rings
+  const spine=new THREE.Group();
+  world.add(spine);
+  for(let i=0;i<7;i++){
+    const ring=new THREE.Mesh(new THREE.TorusGeometry(1.7+i*.13,.018,8,96),[mat.blue,mat.cyan,mat.purple][i%3]);
+    ring.position.set(0,.1+i*.55,.95-i*.18);
+    ring.rotation.x=Math.PI/2;
+    spine.add(ring);
+  }
+  // Floating backend nodes
+  const nodePositions=[[-6,2,0],[6,2,0],[-5,-.2,-2.5],[5,-.2,-2.5],[-3.2,4,-1.5],[3.2,4,-1.5]];
+  nodePositions.forEach((p,i)=>{
+    const n=new THREE.Mesh(new THREE.SphereGeometry(.11,16,16),[mat.blue,mat.cyan,mat.purple][i%3]);
+    n.position.set(...p); world.add(n);
+    const halo=new THREE.Mesh(new THREE.TorusGeometry(.24,.012,8,40),n.material);
+    halo.position.copy(n.position); world.add(halo);
+  });
+  // Vertical light columns for depth
+  [-8,8].forEach(x=>{
+    const col=box(.04,8,.04,x,2,-3,mat.cyan);
+    col.material.transparent=true; col.material.opacity=.24;
+  });
+
+  // V5: spatial system beacons / interaction targets.
+  const beacons=[];
+  [[0,1.2,1.1,0x22d3ee],[0,3.9,-.4,0x8b5cf6],[-1.9,.2,-.2,0x00bfff],[1.9,.2,-.2,0x00bfff]].forEach((p,i)=>{
+    const g=new THREE.Group(); g.position.set(p[0],p[1],p[2]); world.add(g);
+    const outer=new THREE.Mesh(new THREE.TorusGeometry(.48,.012,8,64),new THREE.MeshBasicMaterial({color:p[3],transparent:true,opacity:.65}));
+    outer.rotation.x=Math.PI/2; g.add(outer);
+    const inner=new THREE.Mesh(new THREE.RingGeometry(.12,.16,32),new THREE.MeshBasicMaterial({color:p[3],transparent:true,opacity:.24,side:THREE.DoubleSide}));
+    inner.rotation.x=-Math.PI/2; g.add(inner);
+    beacons.push({g,outer,inner,phase:i*.6});
+  });
+
+  // Cinematic data-center shell: ceiling panels, light strips, cable trays, and reflective floor accents.
+  const room=new THREE.Group();
+  world.add(room);
+  const roomMat=new THREE.MeshStandardMaterial({color:0x070d14,metalness:.72,roughness:.3});
+  const darkMat=new THREE.MeshStandardMaterial({color:0x02060b,metalness:.85,roughness:.24});
+  const glowBlue=new THREE.MeshStandardMaterial({color:0x00bfff,emissive:0x00506b,emissiveIntensity:2.8,metalness:.35,roughness:.18});
+  const glowCyan=new THREE.MeshStandardMaterial({color:0x22d3ee,emissive:0x00606a,emissiveIntensity:2.6,metalness:.3,roughness:.18});
+  const glowPurple=new THREE.MeshStandardMaterial({color:0x8b5cf6,emissive:0x32106b,emissiveIntensity:2.5,metalness:.3,roughness:.18});
+
+  function roomBox(w,h,d,x,y,z,material=roomMat){
+    const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);
+    m.position.set(x,y,z);room.add(m);return m;
+  }
+  // Ceiling and side walls create scale/depth without enclosing the camera too tightly.
+  roomBox(34,.18,25,0,8.25,0,darkMat);
+  roomBox(.12,9,25,-16.9,3.55,0,darkMat);
+  roomBox(.12,9,25,16.9,3.55,0,darkMat);
+  // Ceiling light panels.
+  for(let x=-12;x<=12;x+=4){
+    for(let z=-8;z<=8;z+=4){
+      const panel=roomBox(2.4,.035,1.2,x,8.13,z,(Math.abs(x/4+z/4)%3===0)?glowCyan:glowBlue);
+      panel.material.transparent=true;panel.material.opacity=.42;
+    }
+  }
+  // Long ceiling rails.
+  [-6,0,6].forEach(x=>roomBox(.08,.08,21,x,7.95,0,glowBlue));
+  // Cable trays running above the racks.
+  [-5.6,5.6].forEach(x=>{
+    roomBox(.32,.24,20,x,6.65,0,darkMat);
+    roomBox(1.5,.035,20,x,6.5,0,glowCyan).material.opacity=.18;
+  });
+  // Floor reflective strips and aisle markers.
+  [-8,-2,2,8].forEach(x=>{
+    const strip=roomBox(.035,.018,20,x,-.94,0,glowBlue);
+    strip.material.transparent=true;strip.material.opacity=.38;
+  });
+  // Back wall light bars.
+  for(let y=0;y<7;y+=1.4){
+    const bar=roomBox(30,.025,.025,0,y,8.8,y%2?glowBlue:glowPurple);
+    bar.material.transparent=true;bar.material.opacity=.24;
+  }
+
+  // Animated status LEDs distributed through the room.
+  const statusLeds=[];
+  for(let row=-2;row<=2;row++){
+    for(let col=-8;col<=8;col+=2){
+      const led=new THREE.Mesh(new THREE.SphereGeometry(.025,8,8),[glowBlue,glowCyan,glowPurple][(row+col+20)%3]);
+      led.position.set(col+.35*Math.sin(row),-.82+row*.12,-1.2);
+      room.add(led);statusLeds.push(led);
+    }
+  }
+
+  // Glowing network packets moving through the infrastructure.
+  const packetPaths=[
+    [new THREE.Vector3(-6,3.1,-1.4),new THREE.Vector3(-2.8,2.1,1.1)],
+    [new THREE.Vector3(6,3.1,-1.4),new THREE.Vector3(2.8,2.1,1.1)],
+    [new THREE.Vector3(-1.9,.4,-.2),new THREE.Vector3(0,1.25,1.1)],
+    [new THREE.Vector3(1.9,.4,-.2),new THREE.Vector3(0,1.25,1.1)],
+    [new THREE.Vector3(0,2.2,1.1),new THREE.Vector3(0,3.9,-.4)]
+  ];
+  const packets=[];
+  packetPaths.forEach((pair,pi)=>{
+    const packet=new THREE.Mesh(new THREE.SphereGeometry(.055,12,12),[glowBlue,glowCyan,glowPurple][pi%3]);
+    const trail=new THREE.Mesh(new THREE.SphereGeometry(.12,10,10),packet.material.clone());
+    trail.material.transparent=true;trail.material.opacity=.22;
+    world.add(packet,trail);
+    packets.push({packet,trail,a:pair[0],b:pair[1],phase:pi*.23});
+  });
+
+  // Volumetric-looking light beams built from transparent cones.
+  const beams=[];
+  [[-7,0x00bfff],[0,0x22d3ee],[7,0x8b5cf6]].forEach(([x,c],i)=>{
+    const beam=new THREE.Mesh(new THREE.CylinderGeometry(.18,1.4,7.5,24,1,true),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.035,depthWrite:false,side:THREE.DoubleSide}));
+    beam.position.set(x,2.8,5.8);room.add(beam);beams.push(beam);
+  });
+
+  // Particles
+  const count=innerWidth<700 ? 500 : 1300;
+  const arr=new Float32Array(count*3);
+  for(let i=0;i<count;i++){
+    const r=18*Math.pow(Math.random(),.7);
+    const a=Math.random()*Math.PI*2;
+    arr[i*3]=Math.cos(a)*r;
+    arr[i*3+1]=(Math.random()-.45)*11;
+    arr[i*3+2]=(Math.random()-.5)*10;
+  }
+  const pg=new THREE.BufferGeometry();
+  pg.setAttribute("position",new THREE.BufferAttribute(arr,3));
+  const particles=new THREE.Points(pg,new THREE.PointsMaterial({color:0x00bfff,size:.018,transparent:true,opacity:.48}));
+  scene.add(particles);
+
+  // Lighting
+  scene.add(new THREE.HemisphereLight(0x8ddfff,0x020509,1.2));
+  const key=new THREE.PointLight(0x00bfff,30,25);key.position.set(0,6,5);scene.add(key);
+  const side=new THREE.PointLight(0x8b5cf6,24,18);side.position.set(-7,4,1);scene.add(side);
+  const fill=new THREE.PointLight(0x22d3ee,18,18);fill.position.set(7,2,4);scene.add(fill);
+
+  let targetX=0,targetY=0;
+  addEventListener("pointermove",e=>{
+    targetX=(e.clientX/innerWidth-.5)*.7;
+    targetY=(e.clientY/innerHeight-.5)*.35;
+  });
+
+  let scroll=0;
+  const camState={x:0,y:4.2,z:15,tx:0,ty:1,tz:0,worldY:0,worldR:0};
+  const cameraWaypoints=[
+    {x:0,y:4.2,z:15,tx:0,ty:1,tz:0,worldY:0,worldR:0},
+    {x:-3.8,y:3.1,z:9.5,tx:0,ty:1.4,tz:1,worldY:.02,worldR:.035},
+    {x:0,y:3.5,z:7.1,tx:0,ty:2,tz:0,worldY:-.02,worldR:-.02},
+    {x:3.5,y:2.3,z:5.5,tx:0,ty:.8,tz:-.2,worldY:.03,worldR:.025},
+    {x:-3.8,y:2.8,z:6.5,tx:-1.2,ty:1.1,tz:-.8,worldY:-.03,worldR:-.04},
+    {x:2.8,y:3.8,z:7.2,tx:0,ty:1.8,tz:-.2,worldY:.04,worldR:.03},
+    {x:0,y:4.8,z:8.5,tx:0,ty:3,tz:-.5,worldY:.02,worldR:.02},
+    {x:0,y:2.6,z:13.5,tx:0,ty:1.5,tz:0,worldY:0,worldR:0}
+  ];
+  const proxy={progress:0};
+  const sceneSections=[...document.querySelectorAll("main section[data-scene]")];
+  const hudTitle=document.querySelector("#hud-title");
+  const hudSub=document.querySelector("#hud-sub");
+  const hudCount=document.querySelector("#hud-count");
+  const hudProgress=document.querySelector("#hud-progress");
+
+  const scrollTimeline=gsap.timeline({
+    scrollTrigger:{
+      trigger:"main", start:"top top", end:"bottom bottom", scrub:1.15,
+      onUpdate:self=>{
+        scroll=self.progress;
+        proxy.progress=self.progress;
+        const idx=Math.min(sceneSections.length-1,Math.floor(self.progress*sceneSections.length));
+        const section=sceneSections[idx];
+        if(section){
+          hudTitle.textContent=section.dataset.scene;
+          hudSub.textContent=section.dataset.sub;
+          hudCount.textContent=String(idx+1).padStart(2,"0")+" / "+String(sceneSections.length).padStart(2,"0");
+        }
+        hudProgress.style.width=(self.progress*100).toFixed(1)+"%";
+      }
+    }
+  });
+
+  cameraWaypoints.forEach((p,i)=>{
+    if(i===0){scrollTimeline.set(camState,p); return;}
+    scrollTimeline.to(camState,{...p,duration:1,ease:"none"});
+  });
+
+  function applyCamera(){
+    const px=targetX*1.2;
+    const py=targetY*.55;
+    camera.position.x=THREE.MathUtils.lerp(camera.position.x,camState.x+px,.07);
+    camera.position.y=THREE.MathUtils.lerp(camera.position.y,camState.y-py,.07);
+    camera.position.z=THREE.MathUtils.lerp(camera.position.z,camState.z,.07);
+    camera.lookAt(camState.tx,camState.ty,camState.tz);
+    world.position.y=THREE.MathUtils.lerp(world.position.y,camState.worldY,.05);
+    world.rotation.y=THREE.MathUtils.lerp(world.rotation.y,camState.worldR,.05);
+  }
+
+  function resize(){
+    camera.aspect=innerWidth/innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth,innerHeight);
+    composer.setSize(innerWidth,innerHeight);
+    bloomPass.setSize(innerWidth,innerHeight);
+  }
+  addEventListener("resize",resize);
+
+  if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+    ScrollTrigger.getAll().forEach(t=>t.disable());
+    camera.position.set(0,4.2,15);
+    camera.lookAt(0,1,0);
+  }
+
+  // V6: subtle interactive focus points in the infrastructure.
+  const interactivePoints=[];
+  [
+    {p:new THREE.Vector3(0,1.25,1.1),label:"API GATEWAY"},
+    {p:new THREE.Vector3(-1.9,.15,-.2),label:"MYSQL"},
+    {p:new THREE.Vector3(1.9,.15,-.2),label:"MYSQL"},
+    {p:new THREE.Vector3(0,3.9,-.4),label:"AI / LLM"}
+  ].forEach((d)=>{
+    const hit=new THREE.Mesh(new THREE.SphereGeometry(.42,12,12),new THREE.MeshBasicMaterial({transparent:true,opacity:0}));
+    hit.position.copy(d.p); hit.userData.label=d.label; world.add(hit); interactivePoints.push(hit);
+  });
+  const raycaster=new THREE.Raycaster();
+  const pointer=new THREE.Vector2();
+  const sceneTag=document.querySelector(".scene-tag");
+  addEventListener("pointermove",e=>{
+    pointer.x=(e.clientX/innerWidth)*2-1; pointer.y=-(e.clientY/innerHeight)*2+1;
+  });
+  addEventListener("click",()=>{
+    raycaster.setFromCamera(pointer,camera);
+    const hit=raycaster.intersectObjects(interactivePoints,false)[0];
+    if(hit) sceneTag.innerHTML=`SYSTEM <b>ONLINE</b> · ${hit.object.userData.label} LINK ACTIVE`;
+  });
+
+  // V6: adaptive quality keeps the cinematic look without wasting GPU time.
+  const quality=innerWidth<700 ? {bloom:.72,particles:.65} : {bloom:1.05,particles:1};
+  bloomPass.strength=quality.bloom;
+  const clock=new THREE.Clock();
+  function animate(){
+    const t=clock.getElapsedTime();
+
+
+    // Scroll-controlled cinematic camera + subtle pointer parallax.
+    applyCamera();
+
+    floorShader.uniforms.uTime.value=t;
+    conduits.forEach((c,i)=>{
+      const u=(t*c.speed+c.phase)%1;
+      c.pulse.position.copy(c.curve.getPointAt(u));
+      c.pulse.scale.setScalar(.8+Math.sin(u*Math.PI)*.8);
+    });
+    beacons.forEach((b,i)=>{
+      const s=.85+.18*Math.sin(t*1.7+b.phase);
+      b.g.scale.setScalar(s);
+      b.outer.rotation.z=t*(.45+i*.08);
+      b.inner.rotation.z=-t*(.7+i*.1);
+      b.outer.material.opacity=.38+.28*(.5+.5*Math.sin(t*2+b.phase));
+    });
+
+    loadedAssets.forEach((asset,i)=>{
+      asset.position.y += Math.sin(t*.45+i)*.0009;
+      asset.rotation.y += Math.sin(t*.22+i)*.00012;
+    });
+
+    core.rotation.x=t*.35;
+    core.rotation.y=t*.5;
+    coreRing.rotation.z=t*.55;
+    coreRing2.rotation.x=t*.42;
+    gateway.rotation.y=Math.sin(t*.3)*.008;
+    particles.rotation.y=t*.006;
+    spine.rotation.z=Math.sin(t*.25)*.025;
+    spine.children.forEach((r,i)=>r.rotation.z=t*(.05+i*.008));
+
+    // Data-center life: status LEDs pulse, packets travel through the network, and light beams breathe.
+    statusLeds.forEach((led,i)=>{
+      const pulse=.55+.45*Math.sin(t*2.6+i*.37);
+      led.scale.setScalar(.7+pulse*.65);
+      led.material.emissiveIntensity=1.4+pulse*2.8;
+    });
+    packets.forEach((p,i)=>{
+      const u=(t*(.16+i*.025)+p.phase)%1;
+      p.packet.position.lerpVectors(p.a,p.b,u);
+      const trailU=Math.max(0,u-.075);
+      p.trail.position.lerpVectors(p.a,p.b,trailU);
+      p.packet.scale.setScalar(1+Math.sin(u*Math.PI)*.35);
+    });
+    beams.forEach((b,i)=>{
+      b.material.opacity=.022+.012*Math.sin(t*.75+i*1.4);
+      b.rotation.y=t*.025*(i%2?-1:1);
+    });
+
+    // Keep the infrastructure alive between scroll interactions.
+    key.intensity=26+Math.sin(t*1.2)*4;
+    side.intensity=20+Math.sin(t*.8)*5;
+    fill.intensity=17+Math.sin(t*1.05+.8)*4;
+    particles.material.opacity=.38+.08*Math.sin(t*.5);
+
+    composer.render();
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  // Interactive name effect: cursor-scramble + floating random alphabet glyphs.
+  // The name stays readable, while nearby letters temporarily turn into random A-Z characters.
+  const nameGlitch=document.querySelector("#name-glitch");
+  const glitchChars="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const nameLines=[...nameGlitch.querySelectorAll(".name-line")];
+  nameLines.forEach(line=>{
+    const word=line.dataset.name||"";
+    line.innerHTML=[...word].map(ch=>`<span class="name-char" data-original="${ch}">${ch}</span>`).join("");
+  });
+  const allNameChars=[...nameGlitch.querySelectorAll(".name-char")];
+  let lastGlitch=0;
+  let glyphCount=0;
+
+  function randomLetter(){
+    return glitchChars[Math.floor(Math.random()*glitchChars.length)];
+  }
+
+  function spawnRandomGlyph(x,y){
+    if(glyphCount>10) return;
+    glyphCount++;
+    const glyph=document.createElement("span");
+    glyph.className="name-random-glyph";
+    glyph.textContent=randomLetter()+randomLetter();
+    glyph.style.left=(x + (Math.random()*28-14))+"px";
+    glyph.style.top=(y + (Math.random()*24-12))+"px";
+    glyph.style.setProperty("--gx",(Math.random()*70-35)+"px");
+    glyph.style.setProperty("--gy",(-20-Math.random()*45)+"px");
+    document.body.appendChild(glyph);
+    setTimeout(()=>{glyph.remove();glyphCount=Math.max(0,glyphCount-1)},450);
+  }
+
+  function scrambleAt(x,y){
+    const now=performance.now();
+    if(now-lastGlitch<28) return;
+    lastGlitch=now;
+
+    const nearby=[];
+    allNameChars.forEach(ch=>{
+      const r=ch.getBoundingClientRect();
+      const cx=r.left+r.width/2, cy=r.top+r.height/2;
+      const d=Math.hypot(x-cx,(y-cy)*0.72);
+      if(d<125) nearby.push({ch,d});
+    });
+    nearby.sort((a,b)=>a.d-b.d);
+    if(!nearby.length) return;
+
+    nearby.slice(0,6).forEach(({ch,d},i)=>{
+      const original=ch.dataset.original;
+      ch.classList.add("scramble");
+      clearInterval(ch._scrambleTimer);
+      let ticks=0;
+      const duration=6+i;
+      ch._scrambleTimer=setInterval(()=>{
+        ch.textContent=ticks<duration-1?randomLetter():original;
+        ticks++;
+        if(ticks>=duration){
+          clearInterval(ch._scrambleTimer);
+          ch.textContent=original;
+          ch.classList.remove("scramble");
+        }
+      },30+i*5);
+    });
+
+    // Leave a small stream of random alphabet characters behind the cursor.
+    spawnRandomGlyph(x,y);
+    if(Math.random()>.45) spawnRandomGlyph(x+18,y-8);
+  }
+
+  nameGlitch.addEventListener("pointermove",e=>scrambleAt(e.clientX,e.clientY));
+  nameGlitch.addEventListener("pointerleave",()=>{
+    allNameChars.forEach(ch=>{
+      clearInterval(ch._scrambleTimer);
+      ch.textContent=ch.dataset.original;
+      ch.classList.remove("scramble");
+    });
+  });
+
+  // V6 boot sequence: wait briefly for the first rendered frame, then reveal the experience.
+  const bootScreen=document.querySelector("#boot-screen");
+  const bootBar=document.querySelector("#boot-bar");
+  const bootPercent=document.querySelector("#boot-percent");
+  const bootStatus=document.querySelector("#boot-status");
+  let bootStart=performance.now();
+  function bootTick(now){
+    const progress=Math.min(100,Math.floor((now-bootStart)/14));
+    bootBar.style.width=progress+"%"; bootPercent.textContent=progress+"%";
+    bootStatus.textContent=progress<35?"LOADING 3D SYSTEM":progress<70?"LINKING BACKEND NODES":progress<96?"CALIBRATING CAMERA":"SYSTEM READY";
+    if(progress<100) requestAnimationFrame(bootTick);
+    else setTimeout(()=>bootScreen.classList.add("done"),280);
+  }
+  requestAnimationFrame(bootTick);
+
+  // Active navigation follows the section currently driving the 3D scene.
+  const navLinks=[...document.querySelectorAll("nav a")];
+  sceneSections.forEach(section=>{
+    ScrollTrigger.create({trigger:section,start:"top 45%",end:"bottom 45%",onEnter:()=>setActive(section.id),onEnterBack:()=>setActive(section.id)});
+  });
+  function setActive(id){navLinks.forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+id));}
+
+  // Scroll-linked UI reveals. The 3D camera remains the primary animation.
+  gsap.utils.toArray(".reveal").forEach((el)=>{
+    gsap.fromTo(el,{autoAlpha:0,y:45},{autoAlpha:1,y:0,duration:.9,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 82%",end:"top 55%",scrub:.7}});
+  });
+  gsap.utils.toArray(".card,.project,.timeline-card").forEach((el,i)=>{
+    gsap.fromTo(el,{y:35,rotateX:5,autoAlpha:0},{y:0,rotateX:0,autoAlpha:1,duration:.8,ease:"power2.out",scrollTrigger:{trigger:el,start:"top 88%",end:"top 64%",scrub:.6}});
+  });
+  ScrollTrigger.refresh();
+}
+</script>
+</body>
+</html>
